@@ -44,10 +44,13 @@ const AttendantPage: React.FC = () => {
       }
     });
 
+    console.log("SOCKET", socket);
+    
+
     return () => {
       socket.disconnect();  // Limpar a conexão WebSocket ao desmontar o componente
     };
-  }, [role]);
+  }, [role, messages]);
 
   // Manipula a seleção do cliente
   const handleClientClick = (clientId: string) => {
