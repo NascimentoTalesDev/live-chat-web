@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+		backgroundImage: {
+			'hero-pattern': "url('/images/chat-bg.png')",
+		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

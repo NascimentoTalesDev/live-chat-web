@@ -75,8 +75,15 @@ const ChatBoxClient: React.FC<ChatBoxClientProps> = ({ role, clientId }) => {
     }
   };
 
+  // Manipulador para enviar mensagem ao pressionar "Enter"
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSendMessage();
+    }
+  };
+
   return (
-    <div >
+    <div>
       <div
         style={{
           flex: 1,
@@ -92,7 +99,7 @@ const ChatBoxClient: React.FC<ChatBoxClientProps> = ({ role, clientId }) => {
             key={index}
             style={{
               marginBottom: "10px",
-              textAlign: message.sender === "client" ? "left" : "right",
+              textAlign: message.sender === "client" ? "right" : "left",
             }}
           >
             <strong>{message.sender === "client" ? "Cliente:" : "Atendente:"}</strong>
@@ -102,14 +109,14 @@ const ChatBoxClient: React.FC<ChatBoxClientProps> = ({ role, clientId }) => {
       </div>
       <div className="flex gap-2">
         <Input
+          className="w-full border rounded-l-lg p-2"
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          onKeyDown={handleKeyDown} // Adiciona o manipulador para detectar "Enter"
           placeholder="Digite sua mensagem"
         />
-        <Button
-          onClick={handleSendMessage}
-        >
+        <Button className="bg-blue-500 text-white p-2 rounded-r-lg" onClick={handleSendMessage}>
           Enviar
         </Button>
       </div>

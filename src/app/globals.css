@@ -70,3 +70,6 @@ body {
     @apply bg-background text-foreground;
   }
 }
+.chat-background{
+  background: url('https://media.istockphoto.com/id/1409540606/vector/vector-contact-us-pattern-contact-us-seamless-background.jpg?s=612x612&w=0&k=20&c=3djpAIuo9fE9Mr4T7bLIUpEjqU7XaZk4wWt7aMUgU1o=');
+}

@@ -1,9 +1,10 @@
+import { Image as Photo } from "lucide-react";
 import React, { useState } from "react";
 
 interface ChatBoxAttendantProps {
   role: "attendant";
   clientId: string;
-  messages: { sender: string, text: string }[];
+  messages: { sender: string, text: string, timestamp: Date }[];
   onSendMessage: (message: string) => void;
 }
 
@@ -26,23 +27,42 @@ const ChatBoxAttendant: React.FC<ChatBoxAttendantProps> = ({ messages, onSendMes
             key={index}
             className={`mb-2 ${msg.sender === "client" ? "text-left" : "text-right"}`}
           >
-            <div className={`inline-block ${msg.sender === "client" ? "bg-gray-100" : "bg-blue-100"} p-2 rounded-lg`}>
-              {msg.text}
+            <div className={`inline-block ${msg.sender === "client" ? "bg-zinc-300" : "bg-red-500"} p-2 rounded-lg`}>
+              <div className="flex gap-2">
+                <p>{msg.text}</p>
+                <span className="block text-xs text-gray-600 mt-1">
+                  {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
             </div>
           </div>
         ))}
       </div>
-      <form onSubmit={handleSubmit} className="flex">
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className="w-full border rounded-l-lg p-2"
-          placeholder="Digite sua mensagem"
-        />
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded-r-lg">
-          Enviar
-        </button>
+      <form onSubmit={handleSubmit} className="flex items-center gap-3 w-full">
+        <div>
+          EM
+        </div>
+        <div>
+          <label htmlFor="avatar" className="cursor-pointer">
+            <Photo />
+          </label>
+
+          <input className="hidden" type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" />
+
+        </div>
+        <div className="w-full flex">
+
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="w-full border rounded-l-lg p-2"
+            placeholder="Digite sua mensagem"
+          />
+          <button type="submit" className="bg-blue-500 text-white p-2 rounded-r-lg">
+            Enviar
+          </button>
+        </div>
       </form>
     </div>
   );
