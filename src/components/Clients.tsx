@@ -1,8 +1,10 @@
-import { Client } from '@/app/messages/page'
+import { Client } from '@/app/chat/page'
 import React, { useState } from 'react'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import Image from 'next/image'
+import { getAllMessages } from '@/app/chat/actions'
+import formatCharacterLimit from '@/lib/formatCharacterLimit'
 
 interface ClientsProps {
     clients: Client[]
@@ -13,9 +15,15 @@ interface ClientsProps {
 
 const Clients = ({ clients, clientId, setClientId, setMessages }: ClientsProps) => {
     const [active, setActive] = useState("all")
-    const handleClientClick = (clientId: string) => {
+    
+    const handleClientClick = async (clientId: string) => {
+        console.log("CHAT ID CLIENTS", clientId);
+        
+        const allMessages = await getAllMessages(clientId)
         setClientId(clientId);
-        setMessages([]);  // Limpa o histórico de mensagens quando um novo cliente é selecionado
+        console.log("ALL MESSAGES", allMessages);
+        
+        setMessages(allMessages);  // Limpa o histórico de mensagens quando um novo cliente é selecionado
     };
 
     return (
@@ -34,14 +42,23 @@ const Clients = ({ clients, clientId, setClientId, setMessages }: ClientsProps) 
                         clients.map((client) => (
                             <div
                                 key={client.id}
-                                onClick={() => handleClientClick(client.id)}
+                                onClick={() => handleClientClick(client.chatId)}
                                 className={`flex items-center cursor-pointer gap-2 p-2 h-18 border-b ${clientId === client.id ? "bg-gray-100" : "bg-white"}`}
                             >
                                 <div>
                                     <Image src={''} alt='' height={50} width={50} />
                                 </div>
-                                <div>
-                                    {client.name}
+                                <div >
+                                    <div>
+                                        <h2 className='font-bold'>
+                                            {client.name}
+                                        </h2>
+                                    </div>
+                                    <div>
+                                        <span className='text-sm'>
+                                            {formatCharacterLimit(26, client?.lastMessage)}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         ))

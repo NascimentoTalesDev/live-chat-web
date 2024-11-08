@@ -9,6 +9,8 @@ import Clients from "@/components/Clients";
 export interface Client {
     id: string;
     name: string;
+    chatId: string;
+    lastMessage: string;
 }
 
 const MessagesPage: React.FC = () => {
@@ -25,9 +27,6 @@ const MessagesPage: React.FC = () => {
         });
         setSocket(socket);
 
-        // Não precisa solicitar os clientes conectados ao conectar, remover a linha abaixo:
-        // socket.emit("getConnectedClients");
-
         // Atualiza a lista de clientes conectados quando o servidor envia os clientes
         socket.on("connectedClients", (clients: Client[]) => {
             setClients(clients);
@@ -41,7 +40,6 @@ const MessagesPage: React.FC = () => {
                     { sender: "client", text: message },
                 ]);
             }
-
             // Solicita a atualização da lista de clientes ao receber uma mensagem de um cliente
             socket.emit("getConnectedClients");
         });
@@ -51,7 +49,7 @@ const MessagesPage: React.FC = () => {
         return () => {
             socket.disconnect(); // Limpar a conexão WebSocket ao desmontar o componente
         };
-    }, [role, clientId]);
+    }, [role, clientId, messages]);
 
 
     // Envia uma mensagem do atendente para o cliente
@@ -73,11 +71,9 @@ const MessagesPage: React.FC = () => {
                 setClientId={setClientId}
                 setMessages={setMessages}
             />
-
-            {/* Área de Chat à Direita */}
-                <div className="relative h-full w-full ">
-                    <div className="absolute top-0 right-0 h-full w-full chat-background opacity-10 -z-10"></div>
-                    <div className="h-full w-full">
+            <div className="relative h-full w-full ">
+                <div className="absolute top-0 right-0 h-full w-full chat-background opacity-10 -z-10"></div>
+                <div className="h-full w-full">
 
                     {clientId ? (
                         <div className="flex flex-col h-full">
@@ -93,8 +89,8 @@ const MessagesPage: React.FC = () => {
                             <h2>Selecione um cliente para conversar</h2>
                         </div>
                     )}
-                    </div>
                 </div>
+            </div>
         </div>
     );
 };

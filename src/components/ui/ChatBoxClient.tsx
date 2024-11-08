@@ -16,9 +16,12 @@ interface ChatBoxClientProps {
 }
 
 const ChatBoxClient: React.FC<ChatBoxClientProps> = ({ role, clientId }) => {
+  const [currentUser, setCurrentUser] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
 
   useEffect(() => {
     // Conectar ao servidor WebSocket
@@ -53,11 +56,24 @@ const ChatBoxClient: React.FC<ChatBoxClientProps> = ({ role, clientId }) => {
     };
   }, [role, clientId]);
 
+  const initChat = () => {
+    const values = {
+      name,
+      phone
+    }
+    if (socket && name && phone) {
+      socket.emit("msgToInitChat", values); // Enviar mensagem para o atendente
+      setCurrentUser(name);
+    }
+  };
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
-
+    const values = {
+      newMessage,
+      phone
+    }
     if (role === "client" && socket) {
-      socket.emit("msgToServer", newMessage); // Enviar mensagem para o atendente
+      socket.emit("msgToServer", values); // Enviar mensagem para o atendente
       setMessages((prevMessages) => [
         ...prevMessages,
         { sender: "client", text: newMessage },
@@ -83,44 +99,74 @@ const ChatBoxClient: React.FC<ChatBoxClientProps> = ({ role, clientId }) => {
   };
 
   return (
-    <div>
-      <div
-        style={{
-          flex: 1,
-          overflowY: "scroll",
-          border: "1px solid #ccc",
-          marginBottom: "10px",
-          padding: "10px",
-          height: "500px", // Ajuste a altura para limitar o chat
-        }}
-      >
-        {messages.map((message, index) => (
+    <>
+      {!currentUser && (
+        <div className="h-full w-full flex items-center justify-center">
+
+        <div className="h-[500px] w-[500px] flex flex-col gap-2">
+          <Input
+            className="w-full border rounded-l-lg p-2"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            
+            placeholder="Digite seu nome"
+            />
+          <Input
+            className="w-full border rounded-l-lg p-2"
+            type="text"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="Digite sua mensagem"
+            />
+          <Button className="bg-blue-500 text-white p-2 rounded-r-lg" onClick={initChat}>
+            Iniciar chat
+          </Button>
+        </div>
+        </div>
+      )}
+
+      {currentUser && (
+        <div>
           <div
-            key={index}
             style={{
+              flex: 1,
+              overflowY: "scroll",
+              border: "1px solid #ccc",
               marginBottom: "10px",
-              textAlign: message.sender === "client" ? "right" : "left",
+              padding: "10px",
+              height: "500px", // Ajuste a altura para limitar o chat
             }}
           >
-            <strong>{message.sender === "client" ? "Cliente:" : "Atendente:"}</strong>
-            <p>{message.text}</p>
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                style={{
+                  marginBottom: "10px",
+                  textAlign: message.sender === "client" ? "right" : "left",
+                }}
+              >
+                <strong>{message.sender === "client" ? "Cliente:" : "Atendente:"}</strong>
+                <p>{message.text}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="flex gap-2">
-        <Input
-          className="w-full border rounded-l-lg p-2"
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          onKeyDown={handleKeyDown} // Adiciona o manipulador para detectar "Enter"
-          placeholder="Digite sua mensagem"
-        />
-        <Button className="bg-blue-500 text-white p-2 rounded-r-lg" onClick={handleSendMessage}>
-          Enviar
-        </Button>
-      </div>
-    </div>
+          <div className="flex gap-2">
+            <Input
+              className="w-full border rounded-l-lg p-2"
+              type="text"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyDown={handleKeyDown} // Adiciona o manipulador para detectar "Enter"
+              placeholder="Digite sua mensagem"
+            />
+            <Button className="bg-blue-500 text-white p-2 rounded-r-lg" onClick={handleSendMessage}>
+              Enviar
+            </Button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

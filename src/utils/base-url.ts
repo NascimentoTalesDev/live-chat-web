@@ -1,0 +1,1 @@
+export const baseUrl = process.env.NODE_ENV === "production" ? "https://live-chat-api.vercel.app" : "http://localhost:8000"

@@ -8,7 +8,7 @@ const ClientPage: React.FC = () => {
 
   return (
     <div className="h-full w-full">
-      <ChatBoxClient role={role} />
+        <ChatBoxClient role={role} />
     </div>
   );
 };
