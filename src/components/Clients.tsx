@@ -16,13 +16,9 @@ interface ClientsProps {
 const Clients = ({ clients, clientId, setClientId, setMessages }: ClientsProps) => {
     const [active, setActive] = useState("all")
     
-    const handleClientClick = async (clientId: string) => {
-        console.log("CHAT ID CLIENTS", clientId);
-        
+    const handleClientClick = async (clientId: string) => {        
         const allMessages = await getAllMessages(clientId)
         setClientId(clientId);
-        console.log("ALL MESSAGES", allMessages);
-        
         setMessages(allMessages);  // Limpa o histórico de mensagens quando um novo cliente é selecionado
     };
 
@@ -35,7 +31,6 @@ const Clients = ({ clients, clientId, setClientId, setMessages }: ClientsProps) 
                 <Button onClick={() => setActive("unRead")} className={`rounded-3xl ${active === "unRead" && "bg-zinc-100"}`} variant={"ghost"}>Não Lidas</Button>
                 <Button onClick={() => setActive("favorite")} className={`rounded-3xl ${active === "favorite" && "bg-zinc-100"}`} variant={"ghost"}>Favoritas</Button>
             </div>
-
             {active === "all" &&
                 <>
                     {clients.length > 0 ? (
@@ -43,7 +38,7 @@ const Clients = ({ clients, clientId, setClientId, setMessages }: ClientsProps) 
                             <div
                                 key={client.id}
                                 onClick={() => handleClientClick(client.chatId)}
-                                className={`flex items-center cursor-pointer gap-2 p-2 h-18 border-b ${clientId === client.id ? "bg-gray-100" : "bg-white"}`}
+                                className={`flex items-center cursor-pointer gap-2 p-2 h-18 border-b ${clientId === client.chatId ? "bg-gray-100" : "bg-white"}`}
                             >
                                 <div>
                                     <Image src={''} alt='' height={50} width={50} />

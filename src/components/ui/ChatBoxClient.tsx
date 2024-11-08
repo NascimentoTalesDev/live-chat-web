@@ -103,66 +103,60 @@ const ChatBoxClient: React.FC<ChatBoxClientProps> = ({ role, clientId }) => {
       {!currentUser && (
         <div className="h-full w-full flex items-center justify-center">
 
-        <div className="h-[500px] w-[500px] flex flex-col gap-2">
-          <Input
-            className="w-full border rounded-l-lg p-2"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            
-            placeholder="Digite seu nome"
+          <div className="h-[500px] w-[500px] flex flex-col gap-2">
+            <Input
+              className="w-full border rounded-l-lg p-2"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+
+              placeholder="Digite seu nome"
             />
-          <Input
-            className="w-full border rounded-l-lg p-2"
-            type="text"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Digite sua mensagem"
+            <Input
+              className="w-full border rounded-l-lg p-2"
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Digite sua mensagem"
             />
-          <Button className="bg-blue-500 text-white p-2 rounded-r-lg" onClick={initChat}>
-            Iniciar chat
-          </Button>
-        </div>
+            <Button className="bg-blue-500 text-white p-2 rounded-r-lg" onClick={initChat}>
+              Iniciar chat
+            </Button>
+          </div>
         </div>
       )}
 
       {currentUser && (
-        <div>
-          <div
-            style={{
-              flex: 1,
-              overflowY: "scroll",
-              border: "1px solid #ccc",
-              marginBottom: "10px",
-              padding: "10px",
-              height: "500px", // Ajuste a altura para limitar o chat
-            }}
-          >
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                style={{
-                  marginBottom: "10px",
-                  textAlign: message.sender === "client" ? "right" : "left",
-                }}
-              >
-                <strong>{message.sender === "client" ? "Cliente:" : "Atendente:"}</strong>
-                <p>{message.text}</p>
-              </div>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <Input
-              className="w-full border rounded-l-lg p-2"
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyDown={handleKeyDown} // Adiciona o manipulador para detectar "Enter"
-              placeholder="Digite sua mensagem"
-            />
-            <Button className="bg-blue-500 text-white p-2 rounded-r-lg" onClick={handleSendMessage}>
-              Enviar
-            </Button>
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="flex flex-col justify-between w-[800px] h-[90%] border p-2">
+
+            <div>
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  style={{
+                    marginBottom: "10px",
+                    textAlign: message.sender === "client" ? "right" : "left",
+                  }}
+                >
+                  <strong>{message.sender === "client" ? "Cliente:" : "Atendente:"}</strong>
+                  <p>{message.text}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <Input
+                className="w-full border rounded-l-lg p-2"
+                type="text"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyDown={handleKeyDown} // Adiciona o manipulador para detectar "Enter"
+                placeholder="Digite sua mensagem"
+              />
+              <Button className="bg-blue-500 text-white p-2 rounded-r-lg" onClick={handleSendMessage}>
+                Enviar
+              </Button>
+            </div>
           </div>
         </div>
       )}

@@ -25,6 +25,7 @@ const MessagesPage: React.FC = () => {
         const socket = io("http://localhost:8001", {
             query: { role },
         });
+
         setSocket(socket);
 
         // Atualiza a lista de clientes conectados quando o servidor envia os clientes
@@ -43,8 +44,6 @@ const MessagesPage: React.FC = () => {
             // Solicita a atualização da lista de clientes ao receber uma mensagem de um cliente
             socket.emit("getConnectedClients");
         });
-
-        console.log("SOCKET", socket);
 
         return () => {
             socket.disconnect(); // Limpar a conexão WebSocket ao desmontar o componente
@@ -78,8 +77,6 @@ const MessagesPage: React.FC = () => {
                     {clientId ? (
                         <div className="flex flex-col h-full">
                             <ChatBoxAttendant
-                                role={role}
-                                clientId={clientId}
                                 messages={messages}
                                 onSendMessage={handleSendMessage}
                             />
