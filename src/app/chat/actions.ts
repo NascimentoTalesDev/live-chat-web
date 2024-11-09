@@ -18,3 +18,16 @@ export async function getAllMessages (id: string){
     const messages = await res.json()    
     return messages
 }
+
+export async function getAllMessagesSugestions (query:string){
+    
+    const res = await fetch(`${baseUrl}/messages?search_query=${query}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'API-Key': process.env.DATA_API_KEY!,
+        },
+    })
+    const messages = await res.json()            
+    return messages
+}

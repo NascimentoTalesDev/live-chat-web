@@ -5,6 +5,7 @@ import { io, Socket } from "socket.io-client";
 import React, { useState, useEffect } from "react";
 import ChatBoxAttendant from "@/components/ui/ChatBoxAttendant";
 import Clients from "@/components/Clients";
+import { getAllMessagesSugestions } from "./actions";
 
 export interface Client {
     id: string;
@@ -50,8 +51,6 @@ const MessagesPage: React.FC = () => {
         };
     }, [role, clientId, messages]);
 
-
-    // Envia uma mensagem do atendente para o cliente
     const handleSendMessage = (message: string) => {
         if (!message.trim() || !socket || !clientId) return;
 
