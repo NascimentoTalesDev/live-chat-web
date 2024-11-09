@@ -5,7 +5,7 @@ import { io, Socket } from "socket.io-client";
 import React, { useState, useEffect } from "react";
 import ChatBoxAttendant from "@/components/ui/ChatBoxAttendant";
 import Clients from "@/components/Clients";
-import { getAllMessagesSugestions } from "./actions";
+import { getAllChats } from "./actions";
 
 export interface Client {
     id: string;
@@ -18,6 +18,7 @@ const MessagesPage: React.FC = () => {
     const [role] = useState<"attendant">("attendant");
     const [clientId, setClientId] = useState<string | null>(null);
     const [clients, setClients] = useState<Client[]>([]);
+    const [chats, setChats] = useState<Client[]>([]);
     const [messages, setMessages] = useState<{ sender: string, text: string }[]>([]);
     const [socket, setSocket] = useState<Socket | null>(null);
 
@@ -46,10 +47,17 @@ const MessagesPage: React.FC = () => {
             socket.emit("getConnectedClients");
         });
 
+        getChats("")
+        
         return () => {
             socket.disconnect(); // Limpar a conexão WebSocket ao desmontar o componente
         };
     }, [role, clientId, messages]);
+
+    const getChats = async (query: string) => {
+       const chats = await getAllChats(query)       
+       setChats(chats);
+    };
 
     const handleSendMessage = (message: string) => {
         if (!message.trim() || !socket || !clientId) return;
@@ -64,6 +72,7 @@ const MessagesPage: React.FC = () => {
     return (
         <div className="flex h-full w-full">
             <Clients
+                chats={chats}
                 clients={clients}
                 clientId={clientId ?? ""}
                 setClientId={setClientId}

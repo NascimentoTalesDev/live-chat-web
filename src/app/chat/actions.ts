@@ -31,3 +31,16 @@ export async function getAllMessagesSugestions (query:string){
     const messages = await res.json()            
     return messages
 }
+
+export async function getAllChats (query:string){
+    
+    const res = await fetch(`${baseUrl}/chats?search_query=${query}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'API-Key': process.env.DATA_API_KEY!,
+        },
+    })
+    const chats = await res.json()            
+    return chats
+}

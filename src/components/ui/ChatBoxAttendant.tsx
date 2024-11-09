@@ -1,7 +1,5 @@
-import EmojiPicker from "emoji-picker-react";
-import { Image as Photo, SendHorizonal, SmilePlus } from "lucide-react";
-import React, { useState } from "react";
-import SmartInput from "../SmartInput";
+import React, { useEffect, useRef } from "react";
+import MessageBar from "../MessageBar";
 
 interface ChatBoxAttendantProps {
   messages: { sender: string, text: string }[];
@@ -9,6 +7,15 @@ interface ChatBoxAttendantProps {
 }
 
 const ChatBoxAttendant: React.FC<ChatBoxAttendantProps> = ({ messages, onSendMessage }) => {
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   return (
     <div className="flex flex-col h-full border rounded-lg">
@@ -28,11 +35,11 @@ const ChatBoxAttendant: React.FC<ChatBoxAttendantProps> = ({ messages, onSendMes
             </div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
       <div className="w-full">
-        <SmartInput onSendMessage={onSendMessage} />
+        <MessageBar onSendMessage={onSendMessage} />
       </div>
-      
     </div>
   );
 };
